@@ -27,6 +27,9 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
         val btn = holder.layout.findViewById<Button>(R.id.btnRemove)
         btn.visibility = View.GONE
 
+        val btn2 = holder.layout.findViewById<Button>(R.id.btnModify)
+        btn2.visibility = View.GONE
+
         val tv = holder.layout.findViewById<TextView>(R.id.planTitle)
         tv.text = titles[position]
 
@@ -36,10 +39,14 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
         holder.layout.setOnClickListener {
             Toast.makeText(holder.layout.context, tv.text.toString(), Toast.LENGTH_SHORT).show()
 
-            if(btn.visibility == View.GONE)
+            if(btn.visibility == View.GONE) {
                 btn.visibility = View.VISIBLE
-            else
+                btn2.visibility = View.VISIBLE
+            } else {
                 btn.visibility = View.GONE
+                btn2.visibility = View.GONE
+            }
+
         }
     }
 

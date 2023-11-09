@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         val db = MyDb(this, null)
         val cursor = db.getEvent()
 
-        Log.d("TTT", cursor!!.count.toString())
+//        Log.d("TTT", cursor!!.count.toString())
 
         cursor!!.moveToFirst()
         if(cursor!!.count > 0) {
