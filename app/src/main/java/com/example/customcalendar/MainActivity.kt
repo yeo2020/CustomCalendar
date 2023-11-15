@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = planManager
         }
 
-        val btnEvent = findViewById<Button>(R.id.btnEvent)
+        val btnEvent = findViewById<ImageView>(R.id.btnEvent)
         btnEvent.setOnClickListener {
             // open event activity
             val eventActivity = Intent(this,EventActivity::class.java)

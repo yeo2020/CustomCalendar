@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class EventActivity(): AppCompatActivity() {
+    private var longDate: Long = 0
     private lateinit var textDate: TextView // 이벤트 날짜를 나타내는 TextView
     private lateinit var textEvent: EditText // 이벤트 내용을 입력하는 EditText
 
@@ -38,6 +39,7 @@ class EventActivity(): AppCompatActivity() {
             // 'date'라는 키로 데이터가 인텐트로 전달되었는지 확인합니다.
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
             // 'simpleDateFormat'는 날짜를 지정된 형식("yyyy-MM-dd")으로 문자열로 포맷팅하기 위한 SimpleDateFormat 객체를 생성합니다.
+            longDate = intent.getLongExtra("date", -1)
             var selectedDate = Date(intent.getLongExtra("date", -1))
             // 'intent.getLongExtra("date", -1)'을 사용하여 'date' 키로 전달된 데이터를 읽어와서 'selectedDate' 변수에 저장합니다.
             // 'getLongExtra' 메서드는 'date' 키에 해당하는 값이 없을 경우 기본값으로 -1을 사용합니다.
@@ -50,15 +52,18 @@ class EventActivity(): AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            val date = textDate.text.toString() // 날짜를 TextView로부터 얻어옴
+            val date = longDate.toString() // textDate.text.toString() // 날짜를 TextView로부터 얻어옴
             val content = textEvent.text.toString() // 이벤트 내용을 EditText로부터 얻어옴
             val db = MyDb(this, null)  // 이벤트 정보를 데이터베이스에 추가
             db.addEvent(date, content)  // 사용자에게 메시지 표시
             Toast.makeText(this, "이벤트가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+
+            val mainActivity = Intent(this, MainActivity::class.java)
+            startActivity(mainActivity)
         }
 
         btnDel.setOnClickListener {
-            val date = textDate.text.toString() // 날짜를 TextView로부터 얻어옴
+            val date = longDate.toString() // textDate.text.toString() // 날짜를 TextView로부터 얻어옴
             val db = MyDb(this, null)
 
             // 이벤트 정보를 데이터베이스에서 삭제
@@ -67,6 +72,10 @@ class EventActivity(): AppCompatActivity() {
             } else {
                 Toast.makeText(this, "이벤트 삭제 실패.", Toast.LENGTH_SHORT).show()
             }
+
+            val mainActivity = Intent(this, MainActivity::class.java)
+            startActivity(mainActivity)
+
         }
 
 
