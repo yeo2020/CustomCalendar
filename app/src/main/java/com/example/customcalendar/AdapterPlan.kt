@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<String> ):  RecyclerView.Adapter<AdapterPlan.ListAdapter>(){
+class AdapterPlan(val ids :MutableList<Int>, val titles: MutableList<String>, val contents : MutableList<String> ):  RecyclerView.Adapter<AdapterPlan.ListAdapter>(){
     private var prevItem: Int = -1
 
     class ListAdapter(val layout: View): RecyclerView.ViewHolder(layout)
@@ -25,6 +25,7 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
     }
 
     override fun onBindViewHolder(holder: ListAdapter, position: Int) {
+
         if((position % 2) == 0) {
             holder.layout.setBackgroundColor(Color.argb(255, 235, 235, 235))
         } else {
@@ -38,7 +39,7 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
         btnModify.visibility = View.GONE
 
         // convert Epoch string to Date string
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd      a hh:mm")
         val longDate = titles[position].toLong()
         var selectedDate = Date(longDate)
 
@@ -65,10 +66,10 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
         }
 
         btnTrash.setOnClickListener {
-            val date = longDate.toString() // textDate.text.toString() // 날짜를 TextView로부터 얻어옴
+            val id = ids[position].toString()
             val db = MyDb(it.context, null)
 
-            if (db.deleteEvent(date)) {
+            if (db.deleteEvent(id)) {
                 Toast.makeText(it.context, "이벤트가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(it.context, "이벤트 삭제 실패.", Toast.LENGTH_SHORT).show()
@@ -81,7 +82,7 @@ class AdapterPlan(val titles: MutableList<String>, val contents : MutableList<St
 
         btnModify.setOnClickListener {
             val eventActivity = Intent(it.context,EventActivity::class.java)
-            eventActivity.putExtra("date", longDate)
+            eventActivity.putExtra("dbid", ids[position])
             it.context.startActivity(eventActivity)
         }
 

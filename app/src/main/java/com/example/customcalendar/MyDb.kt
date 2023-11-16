@@ -66,10 +66,20 @@ class MyDb(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return db.rawQuery(query, null)
     }
 
-    fun deleteEvent(date: String): Boolean {
+    fun getEventWithId(id:Int): Cursor? {
+        val db = this.readableDatabase
+
+        val args = arrayOf(id.toString())
+        // 이벤트 날짜를 오름차순으로 정렬하여 데이터를 가져옵니다.
+        val query = "SELECT * FROM $TABLE_NAME WHERE $ID_COL = ? LIMIT 1"
+        return db.rawQuery(query, args)
+    }
+
+
+    fun deleteEvent(id: String): Boolean {
         val db = this.writableDatabase
-        val whereClause = "$DATE_COL = ?"
-        val whereArgs = arrayOf(date)
+        val whereClause = "$ID_COL = ?"
+        val whereArgs = arrayOf(id)
 
         // Delete the event that matches the date
         val deletedRows = db.delete(TABLE_NAME, whereClause, whereArgs)
@@ -77,6 +87,22 @@ class MyDb(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
 
         return deletedRows > 0
+    }
+
+    fun updateEvent(id: String, date: String, content: String): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(DATE_COL, date)
+        values.put(CONTENT_COL, content)
+
+        // 해당 날짜의 이벤트를 업데이트
+        val rowsAffected = db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id))
+
+        db.close()
+
+        // rowsAffected 값이 1 이상이면 업데이트가 성공한 것으로 간주
+        return rowsAffected > 0
+
     }
 
     companion object{

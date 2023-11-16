@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // Load data...
+        val ids: MutableList<Int> = mutableListOf()
         val titles: MutableList<String> = mutableListOf()
         val contents: MutableList<String> = mutableListOf()
 
@@ -43,18 +44,20 @@ class MainActivity : AppCompatActivity() {
 
         cursor!!.moveToFirst()
         if(cursor!!.count > 0) {
+            ids.add(cursor.getInt(cursor.getColumnIndex(MyDb.ID_COL)))
             titles.add(cursor.getString(cursor.getColumnIndex(MyDb.DATE_COL)))
             contents.add(cursor.getString(cursor.getColumnIndex(MyDb.CONTENT_COL)))
         }
 
         while(cursor.moveToNext()){
+            ids.add(cursor.getInt(cursor.getColumnIndex(MyDb.ID_COL)))
             titles.add(cursor.getString(cursor.getColumnIndex(MyDb.DATE_COL)))
             contents.add(cursor.getString(cursor.getColumnIndex(MyDb.CONTENT_COL)))
         }
         cursor.close()
 
         var planManager = LinearLayoutManager(this)
-        var planAdapter = AdapterPlan(titles, contents)
+        var planAdapter = AdapterPlan(ids, titles, contents)
         val rv2 = findViewById<RecyclerView>(R.id.recyclerViewPlan)
 
         rv2.apply {
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         btnEvent.setOnClickListener {
             // open event activity
             val eventActivity = Intent(this,EventActivity::class.java)
-            eventActivity.putExtra("date", MyApp.preferences.getLong("selected_date",-1))
+//            eventActivity.putExtra("date", MyApp.preferences.getLong("selected_date",-1))
             startActivity(eventActivity)
         }
 
