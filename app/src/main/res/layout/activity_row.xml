@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".RowActivity">
 
 
     <LinearLayout
@@ -19,34 +19,51 @@
         <include layout="@layout/header"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/rowHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainHeader">
+
+        <TextView
+            android:id="@+id/rowTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/rcRowView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/rowHeader"
+        />
 
     <View
-        android:id="@+id/recyclerLine"
+        android:id="@+id/rcRowLine"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#bbbbbb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/rcRowView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPlan"
+        android:id="@+id/rcRowViewPlan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerLine" />
+        app:layout_constraintTop_toBottomOf="@+id/rcRowLine" />
 
     <ImageView
-        android:id="@+id/btnEvent"
+        android:id="@+id/btnRowEvent"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -55,6 +72,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/time_add" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

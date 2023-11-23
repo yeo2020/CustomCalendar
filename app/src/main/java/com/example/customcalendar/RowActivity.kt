@@ -3,37 +3,35 @@ package com.example.customcalendar
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
 import java.util.Date
 
-class MainActivity : AppCompatActivity() {
+class RowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_row)
 
-        val monthListManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val monthListAdapter = AdapterMonth()
+        val temp = findViewById<TextView>(R.id.rowTextView)
+        val weekListManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val weekListAdapter = AdapterWeeks(temp)
 
-        val rv = findViewById<RecyclerView>(R.id.recyclerView)
+        val rv = findViewById<RecyclerView>(R.id.rcRowView)
         rv.apply {
-            layoutManager = monthListManager
-            adapter = monthListAdapter
+            layoutManager = weekListManager
+            adapter = weekListAdapter
             scrollToPosition(Int.MAX_VALUE/2)
         }
         val snap = PagerSnapHelper()
         snap.attachToRecyclerView(rv)
 
-        val weekBtn = findViewById<ImageView>(R.id.weekBtn)
-        weekBtn.setOnClickListener {
-            val eventActivity = Intent(this,RowActivity::class.java)
+        val monthBtn = findViewById<ImageView>(R.id.monthBtn)
+        monthBtn.setOnClickListener {
+            val eventActivity = Intent(this,MainActivity::class.java)
             startActivity(eventActivity)
         }
 
@@ -63,23 +61,22 @@ class MainActivity : AppCompatActivity() {
 
         var planManager = LinearLayoutManager(this)
         var planAdapter = AdapterPlan(ids, titles, contents)
-        val rv2 = findViewById<RecyclerView>(R.id.recyclerViewPlan)
+        val rv2 = findViewById<RecyclerView>(R.id.rcRowViewPlan)
 
         rv2.apply {
             adapter = planAdapter
             layoutManager = planManager
         }
 
-        val btnEvent = findViewById<ImageView>(R.id.btnEvent)
+        val btnEvent = findViewById<ImageView>(R.id.btnRowEvent)
         btnEvent.setOnClickListener {
             // open event activity
             val eventActivity = Intent(this,EventActivity::class.java)
-//            eventActivity.putExtra("date", MyApp.preferences.getLong("selected_date",-1))
             startActivity(eventActivity)
         }
 
         // set selected_date to default value
-        MyApp.preferences.setLong("selected_date",Date().time)
+        MyApp.preferences.setLong("selected_date", Date().time)
 
     }
 }
