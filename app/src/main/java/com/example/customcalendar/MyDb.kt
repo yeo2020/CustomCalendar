@@ -7,123 +7,109 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+// SQLiteOpenHelper를 상속하여 데이터베이스 관련 기능을 제공하는 MyDb 클래스 정의
 class MyDb(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
-    // below is the method for creating a database by a sqlite query
+    // 데이터베이스 생성 시 호출되는 메서드
     override fun onCreate(db: SQLiteDatabase) {
-        // below is a sqlite query, where column names
-        // along with their data types is given
-        val query = ("CREATE TABLE " + TABLE_NAME + " ("
-                + ID_COL + " INTEGER PRIMARY KEY, " +
+        // 데이터베이스에 테이블 생성하는 쿼리
+        val query = ("CREATE TABLE " + TABLE_NAME + " (" +
+                ID_COL + " INTEGER PRIMARY KEY, " +
                 DATE_COL + " TEXT," +
                 CONTENT_COL + " TEXT" + ")")
 
-        // we are calling sqlite
-        // method for executing our query
+        // 쿼리 실행
         db.execSQL(query)
     }
 
+    // 데이터베이스 업그레이드 시 호출되는 메서드
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
-        // this method is to check if table already exists
+        // 기존 테이블이 존재하면 삭제하고 다시 생성
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
         onCreate(db)
     }
 
-    // This method is for adding data in our database
-    fun addEvent(date : String, content : String ){
-
-        // below we are creating
-        // a content values variable
+    // 데이터베이스에 이벤트 추가하는 메서드
+    fun addEvent(date: String, content: String) {
+        // ContentValues 객체 생성
         val values = ContentValues()
 
-        // we are inserting our values
-        // in the form of key-value pair
+        // 키-값 쌍으로 값을 설정
         values.put(DATE_COL, date)
         values.put(CONTENT_COL, content)
 
-        // here we are creating a
-        // writable variable of
-        // our database as we want to
-        // insert value in our database
+        // 쓰기 모드의 데이터베이스 열기
         val db = this.writableDatabase
 
-        // all values are inserted into database
+        // 데이터베이스에 값 삽입
         db.insert(TABLE_NAME, null, values)
 
-        // at last we are
-        // closing our database
+        // 데이터베이스 닫기
         db.close()
     }
 
-    // below method is to get
-    // all data from our database
+    // 데이터베이스에서 모든 이벤트 정보를 가져오는 메서드
     fun getEvent(): Cursor? {
         val db = this.readableDatabase
 
-        // 이벤트 날짜를 오름차순으로 정렬하여 데이터를 가져옵니다.
+        // 이벤트 날짜를 오름차순으로 정렬하여 데이터를 가져옴
         val query = "SELECT * FROM $TABLE_NAME ORDER BY $DATE_COL ASC"
         return db.rawQuery(query, null)
     }
 
-    fun getEventWithId(id:Int): Cursor? {
+    // 특정 ID에 해당하는 이벤트 정보를 가져오는 메서드
+    fun getEventWithId(id: Int): Cursor? {
         val db = this.readableDatabase
 
         val args = arrayOf(id.toString())
-        // 이벤트 날짜를 오름차순으로 정렬하여 데이터를 가져옵니다.
+        // 이벤트 날짜를 오름차순으로 정렬하여 데이터를 가져옴
         val query = "SELECT * FROM $TABLE_NAME WHERE $ID_COL = ? LIMIT 1"
         return db.rawQuery(query, args)
     }
 
-
+    // 특정 ID에 해당하는 이벤트를 삭제하는 메서드
     fun deleteEvent(id: String): Boolean {
         val db = this.writableDatabase
         val whereClause = "$ID_COL = ?"
         val whereArgs = arrayOf(id)
 
-        // Delete the event that matches the date
+        // 해당 ID의 이벤트 삭제
         val deletedRows = db.delete(TABLE_NAME, whereClause, whereArgs)
 
+        // 데이터베이스 닫기
         db.close()
 
+        // 삭제된 행이 1개 이상이면 성공적으로 삭제된 것으로 간주
         return deletedRows > 0
     }
 
+    // 특정 ID에 해당하는 이벤트를 업데이트하는 메서드
     fun updateEvent(id: String, date: String, content: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
+
+        // 업데이트할 값 설정
         values.put(DATE_COL, date)
         values.put(CONTENT_COL, content)
 
-        // 해당 날짜의 이벤트를 업데이트
+        // 해당 ID의 이벤트 업데이트
         val rowsAffected = db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id))
 
+        // 데이터베이스 닫기
         db.close()
 
-        // rowsAffected 값이 1 이상이면 업데이트가 성공한 것으로 간주
+        // 업데이트된 행이 1개 이상이면 성공적으로 업데이트된 것으로 간주
         return rowsAffected > 0
-
     }
 
-    companion object{
-        // here we have defined variables for our database
-
-        // below is variable for database name
-        private val DATABASE_NAME = "TEAM_CALENDAR_GWNU"
-
-        // below is the variable for database version
-        private val DATABASE_VERSION = 1
-
-        // below is the variable for table name
-        val TABLE_NAME = "tcg_table"
-
-        // below is the variable for id column
-        val ID_COL = "id"
-
-        // below is the variable for name column
-        val DATE_COL = "event_date"
-
-        // below is the variable for age column
-        val CONTENT_COL = "event_content"
+    // 동반 객체로 정적 상수 및 메서드 정의
+    companion object {
+        private val DATABASE_NAME = "TEAM_CALENDAR_GWNU"  // 데이터베이스 이름
+        private val DATABASE_VERSION = 1  // 데이터베이스 버전
+        val TABLE_NAME = "tcg_table"  // 테이블 이름
+        val ID_COL = "id"  // ID 컬럼 이름
+        val DATE_COL = "event_date"  // 날짜 컬럼 이름
+        val CONTENT_COL = "event_content"  // 내용 컬럼 이름
     }
 }

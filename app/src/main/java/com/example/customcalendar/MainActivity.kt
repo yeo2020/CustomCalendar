@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         // set selected_date to default value
         MyApp.preferences.setLong("selected_date",Date().time)
+        MyApp.preferences.setLong("cal_mode", 0)
 
     }
 }

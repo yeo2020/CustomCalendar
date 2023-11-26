@@ -10,7 +10,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Test 3"
-        android:textSize="18sp"
+        android:textSize="1sp"
+        android:visibility="gone"
         android:gravity="center"/>
 
     <TextView

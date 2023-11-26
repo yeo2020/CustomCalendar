@@ -21,4 +21,5 @@ class PreferenceUtil(context: Context) {
     fun setLong(key: String, defValue: Long){
         preferences.edit().putLong(key, defValue).apply()
     }
+
 }
